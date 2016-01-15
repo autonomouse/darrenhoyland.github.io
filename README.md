@@ -22,3 +22,5 @@ You can then leave a space and fill out the rest of the file with [markdown synt
 The source directory ('markdown' in the example, above) can be changed by editing the properties.json. You can also change the root from '/', used for websites hosted on a server, to 'file:///home/path/to/local/directory', which is useful if you wish to use PyQuo as a private journal.
 
 If you wish to generate a website and are looking for a way to host it, one option is to add your website address to the CNAME file and follow the instructions [here](https://pages.github.com/).
+
+To generate your site, run `./scripts/generate_website.py` and an index.html page will be generated, along with each entry in it's individual category.
