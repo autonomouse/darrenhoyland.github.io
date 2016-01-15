@@ -1,0 +1,8 @@
+{
+  "root":"/",
+  "homepage":"index.html",
+  "searchpage":"search.html",
+  "site_title":"PyQuo",
+  "timestamp_format":"dddd DD MMMM, YYYY",
+  "source_directory":"markdown"  
+}
