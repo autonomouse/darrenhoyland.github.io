@@ -155,8 +155,8 @@ def generate_front_page(site_title, homepage, searchpage, categories, tags,
             for timestamp, (title, link) in sorted(chronology.items(), 
                                                    reverse=True):
                 if category == link.split('/')[0]:
-                    print('<li><a href="{}{}">{}</a></li>'
-                          .format(link, searchpage, title), file=op_file)
+                    print('<li><a href="{}">{}</a></li>'
+                          .format(link, title), file=op_file)
             print('    </ul>', file=op_file)
         
         # TODO: Add some kind of javascript tag-cloud, word-cloud and category 
