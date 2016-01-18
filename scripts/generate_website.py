@@ -23,7 +23,8 @@ def generate_pages(properties):
     searchpage = properties.get('searchpage', 'search.html')
     site_title = properties.get('site_title', 'PyQuo')
     ts_frmt = properties.get('timestamp_format', 'dddd DD MMMM, YYYY')
-    directory = properties.get('source_directory', 'markdown')    
+    directory = properties.get('source_directory', 'markdown')
+    css = properties.get('css')
     
     all_pages = []
     categories = []
@@ -60,7 +61,7 @@ def generate_pages(properties):
             
             if meta.publish is True:
                 generate_static_page(site_title, homepage, searchpage, meta, 
-                                     ts_frmt, proj_root)
+                                     css, ts_frmt, proj_root)
                 all_pages.append(meta)  
                 count += 1
         all_cats = [category for category in set(categories)]
@@ -69,8 +70,9 @@ def generate_pages(properties):
         all_cats, tags, chronology, index, word_cloud =\
             extract_site_wide_metadata(all_pages)    
         generate_front_page(site_title, homepage, searchpage, all_cats, tags,
-                            chronology, word_cloud, proj_root, ts_frmt)
-        generate_search_page(site_title, homepage, searchpage, index, proj_root)
+                            chronology, word_cloud, proj_root, css, ts_frmt)
+        generate_search_page(site_title, homepage, searchpage, index, css, 
+                             proj_root)
 
             
 def extract_site_wide_metadata(all_pages):
@@ -134,7 +136,7 @@ def add_to_chronology_dict(chronology, timestamp, value):
 
 
 def generate_front_page(site_title, homepage, searchpage, categories, tags, 
-                        chronology, word_cloud, proj_root, ts_frmt):
+                        chronology, word_cloud, proj_root, css, ts_frmt):
     with open(homepage, 'w') as op_file:
         print('<html>', file=op_file)
         print('    <header>', file=op_file)
@@ -143,9 +145,11 @@ def generate_front_page(site_title, homepage, searchpage, categories, tags,
         print('<a href="{0}{1}">Home</a> | <a href="{0}{2}">Search</a>'
               .format(proj_root, homepage, searchpage), file=op_file)
         print('        </nav>', file=op_file)
+        print('        <link rel="stylesheet" type="text/css" media="screen"' + 
+              ' href="{}" />'.format(css), file=op_file)
+        print('        <title>{}</title>'.format(site_title), file=op_file)        
         print('    </header>', file=op_file)
         print('    <body>', file=op_file)
-        print('    <title>{}</title>'.format(site_title), file=op_file)        
         
         for cat in sorted(categories, reverse=True):
             category = cat.lower()
@@ -168,18 +172,21 @@ def generate_front_page(site_title, homepage, searchpage, categories, tags,
     print(homepage + ' generated.')
 
 
-def generate_search_page(site_title, homepage, searchpage, index, proj_root):
+def generate_search_page(site_title, homepage, searchpage, index, css, 
+                         proj_root):
     with open(searchpage, 'w') as op_file:
         print('<html>', file=op_file)
         print('    <header>', file=op_file)
         print('    <h3>{}</h3>'.format(site_title), file=op_file)
         print('        <nav>', file=op_file)
+        print('        <link rel="stylesheet" type="text/css" media="screen"' + 
+              ' href="{}" />'.format(css), file=op_file)   
+        print('        <title>Search</title>', file=op_file)     
         print('<a href="{0}{1}">Home</a> | <a href="{0}{2}">Search</a>'
               .format(proj_root, homepage, searchpage), file=op_file)
         print('        </nav>', file=op_file)
         print('    </header>', file=op_file)
-        print('    <body>', file=op_file)
-        print('    <title>Search</title>', file=op_file)     
+        print('    <body>', file=op_file)    
         
         print('    <ul>', file=op_file)         
         for word, links in sorted(index.items()):
@@ -201,7 +208,7 @@ def generate_search_page(site_title, homepage, searchpage, index, proj_root):
     print(searchpage + ' generated.')
     
             
-def generate_static_page(site_title, homepage, searchpage, meta, ts_frmt, 
+def generate_static_page(site_title, homepage, searchpage, meta, css, ts_frmt, 
                          proj_root, media_dir="../media"):
     for cat in meta.categories:
         category = cat.lower()        
@@ -213,7 +220,10 @@ def generate_static_page(site_title, homepage, searchpage, meta, ts_frmt,
             print('    <body>', file=op_file)
             print('    <header>', file=op_file)
             print('    <h3>{}</h3>'.format(site_title), file=op_file)
-            print('        <nav>', file=op_file)            
+            print('        <nav>', file=op_file)        
+            print('        <link rel="stylesheet" type="text/css"' + 
+                  ' media="screen" href="{}" />'.format(css), file=op_file)
+            print('        <title>{}</title>'.format(meta.title), file=op_file)     
             print('<a href="{0}{1}">Home</a> | <a href="{0}{2}">Search</a>'
                   .format(proj_root, homepage, searchpage), file=op_file)
             print('        </nav>', file=op_file)

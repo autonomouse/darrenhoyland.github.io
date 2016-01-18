@@ -4,7 +4,7 @@ import os
 from datetime import datetime
 
 
-def create_entry(folder, timestamp=None, title=None, category=''):
+def create_entry(folder, timestamp=None, title=None, filename=None, category=''):
 
     try:
         os.makedirs(folder)
@@ -16,10 +16,12 @@ def create_entry(folder, timestamp=None, title=None, category=''):
     if title is None:
         title = \
             datetime.strptime(timestamp, "%Y-%m-%d").strftime("%A %d %B, %Y")
-    
-    filename = os.path.join(folder, title + '.md')
-    if os.path.exists(filename):
-        return filename
+    if filename is None:
+        filepath = os.path.join(folder, title + '.md')
+    else:
+        filepath = os.path.join(folder, filename + '.md')
+    if os.path.exists(filepath):
+        return filepath
     
     meta =  "Title:          {}\n"
     meta += "Authors:        Darren Hoyland\n"
@@ -31,7 +33,7 @@ def create_entry(folder, timestamp=None, title=None, category=''):
     meta += "\n\n"
     meta = meta.format(title, timestamp, category)        
     
-    with open(filename, 'w') as op:
+    with open(filepath, 'w') as op:
         op.write(meta)       
     
-    return filename
+    return filepath
