@@ -5,7 +5,7 @@ from datetime import datetime
 from new_entry import create_entry
 
 folder = '/home/darren/Repositories/Journals/Journal/markdown'
-title = 'personal_' + datetime.now().strftime("%Y-%m-%d")
-filename = create_entry(folder, title=title, category='Personal')
+filename = 'personal_' + datetime.now().strftime("%Y-%m-%d")
+path_to_file = create_entry(folder, filename=filename, category='Personal')
 
-Popen(["gedit", filename])
+Popen(["gedit", path_to_file])
