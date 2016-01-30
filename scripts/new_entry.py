@@ -39,7 +39,6 @@ def create_entry(folder, timestamp='', title='', filename=None, category='',
     
     with open(filepath, 'w') as op:
         op.write(meta)
-        op.write('\n')
         op.write(content)       
     
     return filepath
