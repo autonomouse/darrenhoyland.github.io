@@ -25,6 +25,7 @@ def generate_pages(properties):
     ts_frmt = properties.get('timestamp_format', 'dddd DD MMMM, YYYY')
     directory = properties.get('source_directory', 'markdown')
     css = properties.get('css')
+    entries_to_show = properties.get('entries_to_show', 10)
 
     all_pages = []
     categories = []
@@ -69,8 +70,9 @@ def generate_pages(properties):
               .format(count, ', '.join(all_cats)))
         all_cats, tags, chronology, index, word_cloud =\
             extract_site_wide_metadata(all_pages)
-        generate_front_page(site_title, homepage, searchpage, all_cats, tags,
-                            chronology, word_cloud, proj_root, css, ts_frmt)
+        generate_front_and_category_pages(site_title, homepage, searchpage, all_cats, tags,
+                            chronology, word_cloud, proj_root, css, ts_frmt,
+                            entries_to_show)
         generate_search_page(site_title, homepage, searchpage, index, css,
                              proj_root)
 
@@ -134,10 +136,27 @@ def add_to_chronology_dict(chronology, timestamp, value):
                 break
     chronology[timestamp] = value
 
+def generate_front_and_category_pages(site_title, homepage, searchpage,
+                                      categories, tags, chronology, word_cloud,
+                                      proj_root, css, ts_frmt,
+                                      entries_to_show):
+    generate_front_or_cat_page(site_title, homepage, searchpage, categories,
+                               tags, chronology, word_cloud, proj_root, css,
+                               ts_frmt, entries_to_show)
 
-def generate_front_page(site_title, homepage, searchpage, categories, tags,
-                        chronology, word_cloud, proj_root, css, ts_frmt):
-    with open(homepage, 'w') as op_file:
+    for cat in categories:
+        page_title = site_title + ' - ' + cat
+        generate_front_or_cat_page(page_title, homepage, searchpage, [cat],
+                                   tags, chronology, word_cloud, proj_root, css,
+                                   ts_frmt, cat_page=True)
+
+
+
+def generate_front_or_cat_page(site_title, homepage, searchpage, categories, tags,
+                        chronology, word_cloud, proj_root, css, ts_frmt,
+                        entries_to_show=10, cat_page=False):
+    this_page = categories[0] + '/index.html' if cat_page else homepage
+    with open(this_page, 'w') as op_file:
         print('<html>', file=op_file)
         print('    <header>', file=op_file)
         print('    <h3>{}</h3>'.format(site_title), file=op_file)
@@ -152,15 +171,23 @@ def generate_front_page(site_title, homepage, searchpage, categories, tags,
         print('    <body>', file=op_file)
 
         for cat in sorted(categories, reverse=True):
+            more = True
             category = cat.lower()
             print('<h2>{}</h2>'.format(category), file=op_file)
             print('    <ul>', file=op_file)
 
+            count = 0
             for timestamp, (title, link) in sorted(chronology.items(),
                                                    reverse=True):
                 if category == link.split('/')[0]:
-                    print('<li><a href="{}">{}</a></li>'
-                          .format(link, title), file=op_file)
+                    if (cat_page is True) or (count < int(entries_to_show)):
+                        print('<li><a href="{}">{}</a></li>'
+                              .format(link, title), file=op_file)
+                    elif more:
+                        more = False
+                        print('<li><a href="{}/index.html">more...</a></li>'
+                              .format(category), file=op_file)
+                    count += 1
             print('    </ul>', file=op_file)
 
         # TODO: Add some kind of javascript tag-cloud, word-cloud and category
@@ -169,7 +196,7 @@ def generate_front_page(site_title, homepage, searchpage, categories, tags,
         print('    </body>', file=op_file)
         print('</html>', file=op_file)
 
-    print(homepage + ' generated.')
+    print(this_page + ' generated.')
 
 
 def generate_search_page(site_title, homepage, searchpage, index, css,
@@ -270,6 +297,8 @@ def create_dir_if_absent(folder):
 
 
 def main():
+    time_now = arrow.now().strftime('%d-%b-%y %H:%M:%S')
+    print("{}: Generating pages".format(time_now))
     properties = get_properties("properties.json")
     generate_pages(properties=properties)
 
