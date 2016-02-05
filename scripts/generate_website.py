@@ -202,8 +202,8 @@ def generate_search_page(site_title, homepage, searchpage, index, css,
         print('</html>', file=op_file)
 
         # TODO: Add some javascript wizardry so this displays a search box and
-        # only presents the list of pages when that word is entered into the box
-        # (everything else should be hidden).
+        # only presents the list of pages when that word is entered into the
+        # box (everything else should be hidden).
 
     print(searchpage + ' generated.')
 
@@ -216,12 +216,12 @@ def generate_static_page(site_title, homepage, searchpage, meta, css, ts_frmt,
 
         with open(os.path.join(category, meta.slug) + '.html', 'w') as op_file:
             print('<html>', file=op_file)
-            print('    <title>{} ({})</title>'.format(meta.title, category),
-                  file=op_file)
+            print('    <title>{} ({})</title>'.format(
+                  meta.title.title(), category.title()), file=op_file)
             print('    <body>', file=op_file)
             print('    <header>', file=op_file)
-            print('    <h3>{} - {}</h3>'.format(site_title, category),
-                  file=op_file)
+            print('    <h3>{} - {}</h3>'.format(
+                  site_title.title(), category.title()), file=op_file)
             print('        <nav>', file=op_file)
             print('        <link rel="stylesheet" type="text/css"' +
                   ' media="screen" href="{}" />'.format(css), file=op_file)
@@ -237,9 +237,6 @@ def generate_static_page(site_title, homepage, searchpage, meta, css, ts_frmt,
                 print('<img src="{}" />'.format(img_path), file=op_file)
                 print('    </figure>', file=op_file)
             print('        <h2>{}</h2>'.format(meta.title), file=op_file)
-            print('    <tiny>Tags: {}</tiny>'.format(", ".join(meta.tags)),
-                  file=op_file)
-            print('<p></p>', file=op_file)
             print(    meta.content, file=op_file)
             print('    </article></body>', file=op_file)
             print('<p></p>', file=op_file)
@@ -248,6 +245,10 @@ def generate_static_page(site_title, homepage, searchpage, meta, css, ts_frmt,
 
             print('        <h5>{}, {}</h5>'.format(meta.authors, date),
                   file=op_file)
+            if meta.tags not in [[], ['']]:
+                print('    <tiny>Tags: {}</tiny>'.format(", ".join(meta.tags)),
+                      file=op_file)
+                print('<p></p>', file=op_file)
             print('</html>', file=op_file)
 
 
