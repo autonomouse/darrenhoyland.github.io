@@ -239,6 +239,7 @@ def generate_static_page(site_title, homepage, searchpage, meta, css, ts_frmt,
             print('        <h2>{}</h2>'.format(meta.title), file=op_file)
             print('    <tiny>Tags: {}</tiny>'.format(", ".join(meta.tags)),
                   file=op_file)
+            print('<p></p>', file=op_file)
             print(    meta.content, file=op_file)
             print('    </article></body>', file=op_file)
             print('<p></p>', file=op_file)
