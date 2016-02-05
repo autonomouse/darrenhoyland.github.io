@@ -220,13 +220,13 @@ def generate_static_page(site_title, homepage, searchpage, meta, css, ts_frmt,
                   file=op_file)
             print('    <body>', file=op_file)
             print('    <header>', file=op_file)
-            print('    <h4>{}</h4>'.format(category), file=op_file)
-            print('    <h3>{}</h3>'.format(site_title), file=op_file)
-            print('    <h4>{}</h4>'.format(", ".join(meta.tags)), file=op_file)
+            print('    <h3>{} - {}</h3>'.format(site_title, category),
+                  file=op_file)
             print('        <nav>', file=op_file)
             print('        <link rel="stylesheet" type="text/css"' +
                   ' media="screen" href="{}" />'.format(css), file=op_file)
             print('        <title>{}</title>'.format(meta.title), file=op_file)
+            print('    <tiny>Tags: {}</tiny>'.format(", ".join(meta.tags)), file=op_file)
             print('<a href="{0}{1}">Home</a> | <a href="{0}{2}">Search</a>'
                   .format(proj_root, homepage, searchpage), file=op_file)
             print('        </nav>', file=op_file)
