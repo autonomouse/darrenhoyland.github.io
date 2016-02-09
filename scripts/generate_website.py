@@ -171,7 +171,7 @@ def generate_front_or_cat_page(site_title, homepage, searchpage, categories, tag
         print('    <body>', file=op_file)
 
         for cat in sorted(categories, reverse=True):
-            more = True
+            show_more_link = True
             category = cat.lower()
             print('<h2>{}</h2>'.format(category), file=op_file)
             print('    <ul>', file=op_file)
@@ -181,10 +181,12 @@ def generate_front_or_cat_page(site_title, homepage, searchpage, categories, tag
                                                    reverse=True):
                 if category == link.split('/')[0]:
                     if (cat_page is True) or (count < int(entries_to_show)):
+                        if cat_page is True:
+                            link = link.split('/')[1]
                         print('<li><a href="{}">{}</a></li>'
                               .format(link, title), file=op_file)
-                    elif more:
-                        more = False
+                    elif show_more_link:
+                        show_more_link = False
                         print('<li><a href="{}/index.html">more...</a></li>'
                               .format(category), file=op_file)
                     count += 1
@@ -253,8 +255,11 @@ def generate_static_page(site_title, homepage, searchpage, meta, css, ts_frmt,
             print('        <link rel="stylesheet" type="text/css"' +
                   ' media="screen" href="{}" />'.format(css), file=op_file)
             print('        <title>{}</title>'.format(meta.title), file=op_file)
-            print('<a href="{0}{1}">Home</a> | <a href="{0}{2}">Search</a>'
-                  .format(proj_root, homepage, searchpage), file=op_file)
+            link_bar = '<a href="{0}{1}">Home</a> | '
+            link_bar += '<a href="index.html">{3}</a> | '
+            link_bar += '<a href="{0}{2}">Search</a>'                  
+            print(link_bar.format(proj_root, homepage, searchpage, 
+                  category.title()), file=op_file)
             print('        </nav>', file=op_file)
             print('    </header>', file=op_file)
             print('    <article>', file=op_file)

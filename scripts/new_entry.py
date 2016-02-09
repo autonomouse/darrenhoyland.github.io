@@ -2,10 +2,13 @@
 
 import os
 from datetime import datetime
+from generate_website import get_properties
+
+properties_file = "properties.json"
 
 
-def create_entry(folder, timestamp='', title='', filename=None, category='',
-                 name='', tags='', header_image='', categories='', 
+def create_entry(folder, timestamp=None, title=None, filename=None, 
+                 categories='', name='', tags='', header_image='', 
                  publish_bool='True', content=''):
 
     try:
@@ -42,3 +45,9 @@ def create_entry(folder, timestamp='', title='', filename=None, category='',
         op.write(content)       
     
     return filepath
+
+def get_editor():
+    props_path = os.path.abspath(os.path.join(os.path.dirname(__file__),  
+                                 '../' + properties_file))
+    properties = get_properties(properties_file=props_path)
+    return properties.get('text_editor', None)
