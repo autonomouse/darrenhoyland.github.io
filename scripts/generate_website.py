@@ -96,7 +96,8 @@ def extract_site_wide_metadata(all_pages, key='index_and_tags',
             if category not in categories:
                 categories.append(category)
 
-            for tag in page.tags:
+            for _tag in page.tags:
+                tag = _tag.strip().lower()
                 if tag not in tags:
                     tags[tag] = 1
                 else:
