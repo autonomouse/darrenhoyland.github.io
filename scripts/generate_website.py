@@ -77,7 +77,8 @@ def generate_pages(properties):
                              proj_root)
 
 
-def extract_site_wide_metadata(all_pages):
+def extract_site_wide_metadata(all_pages, key='index_and_tags',
+                               ignore_threshold_percentage=40):
     """Get site-wide metadata.
 
     - Arrange titles by inverse date order, with link to location.
@@ -110,31 +111,55 @@ def extract_site_wide_metadata(all_pages):
                 else:
                     timestamp = arrow.now()
                 add_to_chronology_dict(
-                    chronology, timestamp, (page.title, link))
+                    chronology, category, timestamp, (page.title, link))
 
-            for idx in sorted(page.index + [tag.lower().strip() for tag in
-                              page.tags if tag != ""]):
+            tags_only = [tag.lower().strip() for tag in page.tags if tag != ""]
+            idx_words = [idx_word for idx_word in page.index if
+                         idx_word[0].isdigit() is False and len(idx_word) > 2
+                         and '_' not in idx_word]
+            search_page_type = {
+                'index_only': idx_words,
+                'tags_only': tags_only,
+                'index_and_tags': idx_words + tags_only}
+
+            for idx in sorted(search_page_type[key]):
                 word = idx.strip()
-                link = chronology[timestamp][1]
+                timestamped_entry = chronology[timestamp].get(category)
+                if timestamped_entry is None:
+                    continue
+                link = timestamped_entry[1]
                 if word not in index:
                     index[word] = [link]
                 else:
                     if link not in index[word]:
                         index[word].append(link)
+
+    # Exclude links that feature in more than a certain percentage of entries:
+    threshold = (len(all_pages) / 100) * ignore_threshold_percentage
+    exclude_from_index = []
+    for word, entries in index.items():
+        if len(entries) > threshold:
+            exclude_from_index.append(word)
+    for common_word in exclude_from_index:
+        index.pop(common_word)
+    print("Excluding the following common words from search index:\n{}"
+          .format(", ".join(sorted(exclude_from_index))))
     words_used = [(idx, len(index[idx])) for idx in index]
     word_cloud = sorted(words_used, key=lambda x: x[1], reverse=True)
 
     return categories, tags, chronology, index, word_cloud
 
 
-def add_to_chronology_dict(chronology, timestamp, value):
+def add_to_chronology_dict(chronology, category, timestamp, value):
     if timestamp in chronology:
         for num in range(1, 3600):
             one_second_later = timestamp.replace(seconds =+ num)
             if one_second_later not in chronology:
                 timestamp = one_second_later
                 break
-    chronology[timestamp] = value
+    if timestamp not in chronology:
+        chronology[timestamp] = {}
+    chronology[timestamp][category] = value
 
 def generate_front_and_category_pages(site_title, homepage, searchpage,
                                       categories, tags, chronology, word_cloud,
@@ -177,19 +202,20 @@ def generate_front_or_cat_page(site_title, homepage, searchpage, categories, tag
             print('    <ul>', file=op_file)
 
             count = 0
-            for timestamp, (title, link) in sorted(chronology.items(),
+            for timestamp, cat_dict in sorted(chronology.items(),
                                                    reverse=True):
-                if category == link.split('/')[0]:
-                    if (cat_page is True) or (count < int(entries_to_show)):
-                        if cat_page is True:
-                            link = link.split('/')[1]
-                        print('<li><a href="{}">{}</a></li>'
-                              .format(link, title), file=op_file)
-                    elif show_more_link:
-                        show_more_link = False
-                        print('<li><a href="{}/index.html">more...</a></li>'
-                              .format(category), file=op_file)
-                    count += 1
+                for category, (title, link) in cat_dict.items():
+                    if category == link.split('/')[0]:
+                        if (cat_page is True) or (count < int(entries_to_show)):
+                            if cat_page is True:
+                                link = link.split('/')[1]
+                            print('<li><a href="{}">{}</a></li>'
+                                  .format(link, title), file=op_file)
+                        elif show_more_link:
+                            show_more_link = False
+                            print('<li><a href="{}/index.html">more...</a></li>'
+                                  .format(category), file=op_file)
+                        count += 1
             print('    </ul>', file=op_file)
 
         # TODO: Add some kind of javascript tag-cloud, word-cloud and category
@@ -219,7 +245,8 @@ def generate_search_page(site_title, homepage, searchpage, index, css,
 
         print('    <ul>', file=op_file)
         for word, links in sorted(index.items()):
-            print('    <li>{}'.format(word), file=op_file)
+            print('    <li><b><a name="{0}">{0}</a></b>'.format(word),
+                  file=op_file)
             print('        <ul>', file=op_file)
             for link in links:
                 print('        <li><a href="{0}">{0}</a></li>'.format(link),
@@ -257,8 +284,8 @@ def generate_static_page(site_title, homepage, searchpage, meta, css, ts_frmt,
             print('        <title>{}</title>'.format(meta.title), file=op_file)
             link_bar = '<a href="{0}{1}">Home</a> | '
             link_bar += '<a href="index.html">{3}</a> | '
-            link_bar += '<a href="{0}{2}">Search</a>'                  
-            print(link_bar.format(proj_root, homepage, searchpage, 
+            link_bar += '<a href="{0}{2}">Search</a>'
+            print(link_bar.format(proj_root, homepage, searchpage,
                   category.title()), file=op_file)
             print('        </nav>', file=op_file)
             print('    </header>', file=op_file)
