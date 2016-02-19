@@ -204,7 +204,7 @@ def generate_front_or_cat_page(site_title, homepage, searchpage, categories, tag
             count = 0
             for timestamp, cat_dict in sorted(chronology.items(),
                                                    reverse=True):
-                for category, (title, link) in cat_dict.items():
+                for _, (title, link) in cat_dict.items():
                     if category == link.split('/')[0]:
                         if (cat_page is True) or (count < int(entries_to_show)):
                             if cat_page is True:
@@ -305,7 +305,13 @@ def generate_static_page(site_title, homepage, searchpage, meta, css, ts_frmt,
             print('        <h5>{}, {}</h5>'.format(meta.authors, date),
                   file=op_file)
             if meta.tags not in [[], ['']]:
-                print('    <tiny>Tags: {}</tiny>'.format(", ".join(meta.tags)),
+                tags = []
+                for tag in meta.tags:
+                    linked_tag = '<a href="{proj_root}{search}#{tag}">{tag}</a>'
+                    tags.append(linked_tag.format(proj_root=proj_root,
+                                                  search=searchpage,
+                                                  tag=tag.strip()))
+                print('    <tiny>Tags: {}</tiny>'.format(", ".join(tags)),
                       file=op_file)
                 print('<p></p>', file=op_file)
             print('</html>', file=op_file)
