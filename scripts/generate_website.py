@@ -138,7 +138,7 @@ def extract_site_wide_metadata(all_pages, key='index_and_tags',
     threshold = (len(all_pages) / 100) * ignore_threshold_percentage
     exclude_from_index = []
     for word, entries in index.items():
-        if len(entries) > threshold:
+        if (len(entries) > threshold) and (word not in tags):
             exclude_from_index.append(word)
     for common_word in exclude_from_index:
         index.pop(common_word)
