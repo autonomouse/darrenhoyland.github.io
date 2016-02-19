@@ -310,7 +310,7 @@ def generate_static_page(site_title, homepage, searchpage, meta, css, ts_frmt,
                     linked_tag = '<a href="{proj_root}{search}#{tag}">{tag}</a>'
                     tags.append(linked_tag.format(proj_root=proj_root,
                                                   search=searchpage,
-                                                  tag=tag.strip()))
+                                                  tag=tag.strip().lower()))
                 print('    <tiny>Tags: {}</tiny>'.format(", ".join(tags)),
                       file=op_file)
                 print('<p></p>', file=op_file)
