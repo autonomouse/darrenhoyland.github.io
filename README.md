@@ -1,26 +1,55 @@
-# PyQuo
-Static site generator and/or journal using markdown.
+# Hello World Website
 
-PyQuo is written in Python3 and uses markdown to generate a collection of html pages that can be used as a static blog or a offline journal.
+A simple, clean static website built with HTML5 and CSS. This website is designed to work perfectly with GitHub Pages.
 
-## Quickstart
+## Features
 
-To begin, you can run the "`new_personal_entry.py`" example script provided in the scripts directory as follows:
+- ✅ Pure HTML5 with semantic structure
+- ✅ Custom CSS styling (no frameworks)
+- ✅ Fully responsive design
+- ✅ Modern gradient hero section
+- ✅ Interactive hover effects
+- ✅ GitHub Pages compatible
 
-`./scripts/new_personal_entry.py` which will generate a file in the 'markdown' directory with the necessary metadata already pre-populated. Alternatively, you can, of course, do this manually  and add a file to the 'markdown' directory. There you can fill out the metadata at the beginning of the file, such as this:
+## GitHub Pages Deployment
 
-Title:          First post!
-Authors:        Darren Hoyland
-Date:           2015-12-21
-Tags:           Meta
-HeaderImage:
-Category:       Blog
-Publish:        True
+This website is ready to be deployed on GitHub Pages. To deploy:
 
-You can then leave a space and fill out the rest of the file with [markdown syntax](http://daringfireball.net/projects/markdown/syntax).
+1. Go to your repository settings
+2. Navigate to "Pages" in the left sidebar
+3. Under "Source", select "Deploy from a branch"
+4. Select the `main` branch (or `master` if that's your default)
+5. Select `/ (root)` as the folder
+6. Click "Save"
 
-The source directory ('markdown' in the example, above) can be changed by editing the properties.json. You can also change the root from '/', used for websites hosted on a server, to 'file:///home/path/to/local/directory', which is useful if you wish to use PyQuo as a private journal.
+Your website will be available at: `https://[your-username].github.io/[repository-name]`
 
-If you wish to generate a website and are looking for a way to host it, one option is to add your website address to the CNAME file and follow the instructions [here](https://pages.github.com/).
+## Files Structure
 
-To generate your site, run `./scripts/generate_website.py` and an index.html page will be generated, along with each entry in its individual category.
+```
+.
+├── index.html      # Main HTML file
+├── style.css       # CSS styles
+└── README.md       # This file
+```
+
+## Local Development
+
+To view the website locally, simply open `index.html` in your web browser, or use a local server:
+
+```bash
+# Using Python 3
+python -m http.server 8000
+
+# Using Node.js
+npx http-server
+
+# Using PHP
+php -S localhost:8000
+```
+
+Then visit `http://localhost:8000` in your browser.
+
+## License
+
+This project is in the public domain. Feel free to use it as a starting point for your own projects!
