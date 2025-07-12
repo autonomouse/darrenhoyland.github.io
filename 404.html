@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Page Not Found</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .error-container {
+            min-height: 70vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .error-code {
+            font-size: 8rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 1rem;
+            line-height: 1;
+        }
+        
+        .error-message {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin-bottom: 2rem;
+        }
+        
+        .home-link {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .home-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <h1>Simple Website</h1>
+        </nav>
+    </header>
+    
+    <main>
+        <div class="error-container">
+            <div class="error-code">404</div>
+            <div class="error-message">Oops! Page not found.</div>
+            <p style="color: #666; margin-bottom: 2rem;">The page you're looking for doesn't exist.</p>
+            <a href="/" class="home-link">Go Home</a>
+        </div>
+    </main>
+    
+    <footer>
+        <p>&copy; 2024 Hello World Website. Made with HTML5 and CSS.</p>
+    </footer>
+</body>
+</html>
